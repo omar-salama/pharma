@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Drug {
+  id         Int         @id @default(autoincrement())
+  name       String
+  name_ar    String
+  is_drug    Boolean
+  price      Float
+  image_url  String?
+  category   Category    @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  warehouses Warehouse[]
+}
+
+model Category {
+  id      Int    @id @default(autoincrement())
+  name    String
+  name_ar String
+  Drug    Drug[]
+}
+
+model Warehouse {
+  id       Int    @id @default(autoincrement())
+  name     String
+  name_ar  String
+  discount Int
+  price    Float
+  max_qty  Int
+  drug     Drug   @relation(fields: [drugId], references: [id])
+  drugId   Int
+}
